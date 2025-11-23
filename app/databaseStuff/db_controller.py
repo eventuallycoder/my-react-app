@@ -316,8 +316,9 @@ class DatabaseController:
         )
         self.connection.commit()
 
-    def get_store_by_id(self, store_id: str) -> tuple:
-        """Fetch a single store record by ID."""
+    def get_coffeeshop_by_id(self, store_id: str) -> tuple:
+        print("id " + store_id)
+        """Fetch a single coffeeshop record by ID."""
         self.cursor.execute(
             """
             SELECT store_id, coffee_shop_name, owner_id, street_address, city, state, phone_number

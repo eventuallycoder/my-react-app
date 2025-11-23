@@ -26,6 +26,10 @@ class Store(StoredObject):
     #this returns all information from all coffeeshops
     def get_all_coffeeshops(self):
         return db.get_all_coffeeshops()
+    
+    def get_coffeeshop_by_id(self,shop_id):
+        print("RAWR")
+        return db.get_coffeeshop_by_id(shop_id)
 
     def add(self, coffee_shop_name: str, owner_id: str, street_address: str, city: str, state: str, phone_number: int, logoURL: str) ->str:
         """

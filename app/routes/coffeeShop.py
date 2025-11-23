@@ -20,7 +20,11 @@ newStore = Store()
 @coffeeShopRouter.get("/get_all_coffeeshops")
 async def get_all_coffeeshops():
     return {"Coffeeshops": newStore.get_all_coffeeshops()}
-    
+
+#endpoint that returns all information from a singular coffeeshop by its id
+@coffeeShopRouter.get("get_coffeeshop_by_id/{shop_id}")
+async def get_coffeeshop_by_id(shop_id):
+     return {"Coffeeshop":newStore.get_coffeeshop_by_id(shop_id)}
 
     
 
