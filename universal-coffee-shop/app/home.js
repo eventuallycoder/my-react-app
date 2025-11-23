@@ -20,7 +20,7 @@ export default function HomeScreen() {
 
   // maps SQL rows → frontend shop objects
   function mapRows(rows) {
-    if (!Array.isArray(rows)) return [];
+     if (!Array.isArray(rows)) return [];
     return rows.map((row) => ({
       id: row[0],      // store_id
       name: row[1],    // coffee_shop_name
@@ -28,17 +28,18 @@ export default function HomeScreen() {
   }
 
   // fetch from backend (all or filtered)
-  async function fetchShops(name) {
+  async function fetchShops() {
     try {
-      const query = name.trim() === '' ? '%25' : encodeURIComponent(name.trim());
-      const url = `${BASE_URL}/home/getCoffee_Shop/${query}`;
-
+      
+      //fetch api that gets and returns to 'response' object all information from all coffeeshops
+      const url = `${BASE_URL}/home/get_all_coffeeshops`;
       const response = await fetch(url);
  
+      
       const data = await response.json();
-
-      const mapped = mapRows(data.Coffeeshop);
+      const mapped = mapRows(data.Coffeeshops);
       setShops(mapped);
+       
     } catch (err) {
       console.log('FETCH ERROR:', err);
     }
@@ -59,7 +60,8 @@ export default function HomeScreen() {
 
   // load all shops once
    useEffect(() => {
-     fetchShops('');
+    console.log("Here");
+     fetchShops();
    }, []);
 
   // header section (your same layout)

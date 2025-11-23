@@ -1,28 +1,26 @@
+import {useEffect} from 'react'
 import {Text} from 'react-native';
-import { useState } from 'react';
+import { useLocalSearchParams} from 'expo-router';
   
 
 export default function page()
 {
-
-    //This useEffect should render the data of the coffeeshop
-    //that the user clicked on. 
-
-    async function idk()
+    //runs on component mount to get the information based on the coffeeshops id
+    useEffect(() =>
     {
-        const nameofastore = await fetch(`/getCoffee_Shop/${coffeeShopName}`)
-        const data = await nameofastore.json();
-        const newData = data.Coffeeshop;
-        setCoffeeShopName(newData);
-    }
 
-     
-        
+    })
+
+
+    /*This gets the name of the coffeeshop that was sent from CoffeeShopCard.js
+    'id' is used because it represents the route of the [id] folder */
+    const {id} = useLocalSearchParams();  
+
     return(
-        <>
-        
-        <Text>CoffeeShop: {coffeeShopName}</Text>
-        <Text>Owner Name: {OwnerName}</Text>
-        </>
+       <><Text>Currently on {id} page</Text></>
      )
+
+
+
+
 }

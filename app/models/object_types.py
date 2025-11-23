@@ -19,12 +19,19 @@ class Store(StoredObject):
     
     def get_all(self) -> List[tuple]:
         return db.get_all_stores()
+    
+    #def get_store_by_name(self,coffeeShopName):
+     #   return db.get_store_by_name(coffeeShopName)
 
-    def add(self, coffee_shop_name: str, owner_id: str, street_address: str, city: str, state: str, phone_number: int, logo_url: str) ->str:
+    #this returns all information from all coffeeshops
+    def get_all_coffeeshops(self):
+        return db.get_all_coffeeshops()
+
+    def add(self, coffee_shop_name: str, owner_id: str, street_address: str, city: str, state: str, phone_number: int, logoURL: str) ->str:
         """
         Creates a coffee shop and returns the unique ID as a string.
         """
-        return db.create_coffee_shop(coffee_shop_name, owner_id, street_address, city, state, phone_number, logo_url)
+        return db.create_coffee_shop(coffee_shop_name, owner_id, street_address, city, state, phone_number, logoURL)
     
     def add_menu_item(self, store_id: str, item_name:str, item_price: float, picture_url:str)-> None:
         db.add_menu_item(store_id, item_name, item_price, picture_url)
@@ -32,13 +39,12 @@ class Store(StoredObject):
     def remove_menu_item(self, store_id:str, item_name:str) ->None:
         db.remove_menu_item(store_id, item_name)
 
-class User(ABC, StoredObject):
+class User(StoredObject):
     def get_by_id(self, id) -> tuple:
         return db.get_user_from_id(id)
 
     def get_by_email(self, email: str) -> tuple:
-        # ToDo: call the get_by_email function in db_controller once it exists.
-        pass
+        return db.get_user_by_email(email)
 
     def get_all(self) -> List[tuple]:
         return db.get_all_users()
@@ -62,7 +68,7 @@ class StandardUser(User):
 class AdminUser(User):
 
     def get_all(self):
-        return db.get_standard_users()
+        return db.get_admin_users()
 
     def add(self, user_name: str, password: str) -> str:
         return db.create_user(user_name, password, True)
