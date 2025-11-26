@@ -317,7 +317,6 @@ class DatabaseController:
         self.connection.commit()
 
     def get_coffeeshop_by_id(self, store_id: str) -> tuple:
-        print("id " + store_id)
         """Fetch a single coffeeshop record by ID."""
         self.cursor.execute(
             """
@@ -328,17 +327,28 @@ class DatabaseController:
         )
         return self.cursor.fetchone()
     
-    #this returns all information from all coffeeshops
-    def get_all_coffeeshops(self) -> List[tuple]:
-        """Fetch all store records with every attribute."""
+    def get_coffeeshop_by_name(self, store_name: str) -> tuple:
+        """Fetch a single coffeeshop record by ID."""
         self.cursor.execute(
             """
-            SELECT *
-            FROM stores;
-            """
+            SELECT store_id, coffee_shop_name, owner_id, street_address, city, state, phone_number
+            FROM stores WHERE coffee_shop_name = ?;
+            """,
+            (store_name,),
         )
         return self.cursor.fetchall()
+    
+    def get_all_stores(self) -> List[tuple]:
+        """
+            Returns all existing stores.
+        """
+        self.cursor.execute(
+            """
+            SELECT * FROM stores;
+            """
+        )
 
+        return self.cursor.fetchall()
     
     def get_user_by_email(self, email: str) -> tuple | None:
         """
@@ -363,20 +373,10 @@ class DatabaseController:
             (user_id,),
         )
         return self.cursor.fetchall()
-    
-    def get_all_stores(self) -> List[tuple]:
-        """
-            Returns all existing stores.
-        """
-        self.cursor.execute(
-            """
-            SELECT * FROM stores;
-            """
-        )
 
         return self.cursor.fetchall()
 
-    def create_coffee_shop(self, coffee_shop_name: str, owner_id: str, street_address: str, city: str, state: str, phone_number: int, logoURL: str) -> str:
+    def create_coffee_shop(self, coffee_shop_name: str, owner_id: str, street_address: str, city: str, state: str, phone_number: int, logo_url: str) -> str:
         """
         Creates a coffee shop with a generated unique store_id and returns it.
         Also links the owner to the store in user_owns.

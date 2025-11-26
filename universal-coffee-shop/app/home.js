@@ -1,10 +1,16 @@
 // universal-coffee-shop/app/home.js
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TextInput, SafeAreaView, FlatList, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TextInput, FlatList, TouchableOpacity } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import CoffeeShopCard from '../components/CoffeeShopCard';
 import { useRouter } from 'expo-router';
 import * as SecureStore from "expo-secure-store";
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+
+  
+
+ 
 
 // BACKEND URL 
 const BASE_URL = 'http://192.168.1.175:8080';
@@ -17,6 +23,9 @@ export default function HomeScreen() {
 
   // data coming from backend
   const [shops, setShops] = useState([]);
+
+  //this sets the coffeeshop selection by the user (modify coffeeshop or add coffeeshop)
+  const [coffeeshopSelection, setcoffeeshopSelection] = useState("");
 
    // load all shops once on component mount (when the page loads)
    useEffect(() => {
@@ -40,6 +49,33 @@ export default function HomeScreen() {
       
       //fetch api that gets and returns to 'response' object all information from all coffeeshops
       const url = `${BASE_URL}/home/get_all_coffeeshops`;
+      const response = await fetch(url);
+ 
+      //this holds the un-jsoned object containg information about all coffeeshops
+      const data = await response.json();
+
+      //data.Coffeeshops contains the array of coffeeshops
+      const mapped = mapRows(data.Coffeeshops);
+      setShops(mapped);
+       
+    } catch (err) {
+      console.log('FETCH ERROR:', err);
+    }
+  }
+
+  //called when a shop is fetched by name in the search bar
+  async function fetchShops(name)
+  {
+    try {
+
+      //returns the page to normal if the user clicks the search bar with nothing inside
+       if(name == '')
+       {
+         fetchAllShops();
+         return;
+       }
+      //fetch api that gets and returns to 'response' object all information from all coffeeshops
+      const url = `${BASE_URL}/home/get_coffeeshop_by_name/${name}`;
       const response = await fetch(url);
  
       //this holds the un-jsoned object containg information about all coffeeshops
@@ -81,11 +117,13 @@ export default function HomeScreen() {
           <Feather name="search" size={24} color="black" />
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => router.replace('/AddCoffeeShop')} style={styles.iconButton}>
+        <TouchableOpacity onPress={() => router.replace('/modify_or_add')} style={styles.iconButton}>
           <Feather name="plus" size={24} color="black" />
         </TouchableOpacity>
+        
+         
 
-        <TouchableOpacity style={styles.iconButton}>
+        <TouchableOpacity onPress={() => router.push(`profile/[${username}]/page`)} style={styles.iconButton}>
           <Feather name="user" size={24} color="black" />
         </TouchableOpacity>
 
@@ -141,4 +179,27 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     fontFamily: 'Anton-Regular',
   },
+  dropdown: {
+      margin: 16,
+      height: 50,
+      borderBottomColor: 'gray',
+      borderBottomWidth: 0.5,
+    },
+    icon: {
+      marginRight: 5,
+    },
+    placeholderStyle: {
+      fontSize: 16,
+    },
+    selectedTextStyle: {
+      fontSize: 16,
+    },
+    iconStyle: {
+      width: 20,
+      height: 20,
+    },
+    inputSearchStyle: {
+      height: 40,
+      fontSize: 16,
+    },
 });
