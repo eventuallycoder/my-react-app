@@ -14,7 +14,7 @@ import * as SecureStore from "expo-secure-store";
 
 const API_BASE =
   process.env.EXPO_PUBLIC_API_URL?.replace(/\/+$/, "") ||
-  "http://192.168.1.164:8080";
+  "http://192.168.1.175:8080";
 
 export default function MFAScreen() {
   const { challenge_id, email } = useLocalSearchParams();
@@ -50,21 +50,11 @@ export default function MFAScreen() {
       );
       return;
     }
-
+// Store user_id and is_admin after successful MFA. SecureStore errors are ignored on web.
     try {
-      if (data?.token && SecureStore?.setItemAsync) {
-        await SecureStore.setItemAsync("access_token", String(data.token));
-      }
-      if (data?.user_id && SecureStore?.setItemAsync) {
-        await SecureStore.setItemAsync("user_id", String(data.user_id));
-      }
-      if (data?.is_admin !== undefined && SecureStore?.setItemAsync) {
-        await SecureStore.setItemAsync(
-          "is_admin",
-          JSON.stringify(data.is_admin)
-        );
-      }
-    } catch (err) {
+      await SecureStore.setItemAsync("user_id", String(data.user_id));
+      await SecureStore.setItemAsync("is_admin", String(data.is_admin));
+        } catch (err) {
       console.log("SecureStore error (ignored on web):", err);
 
     }
