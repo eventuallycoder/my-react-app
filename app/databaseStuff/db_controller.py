@@ -48,6 +48,7 @@ class DatabaseController:
         self.cursor.execute("""
         CREATE TABLE users(
             user_id TEXT PRIMARY KEY UNIQUE,
+            name TEXT,
             email TEXT UNIQUE,
             password TEXT,
             is_admin INTEGER
@@ -170,7 +171,7 @@ class DatabaseController:
 
         self.database_close()
 
-    def create_user(self, email: str, password: str, is_admin: bool) -> str:
+    def create_user(self, name:str, email: str, password: str, is_admin: bool) -> str:
         """
         Creates a new user in the database.
         returns their ID
@@ -183,9 +184,9 @@ class DatabaseController:
 
         self.cursor.execute("BEGIN TRANSACTION;")
         self.cursor.execute("""
-        INSERT INTO users (user_id, email, password, is_admin)
-        VALUES (?, ?, ?, ?);
-        """, (user_id, email, password, int(is_admin)))
+        INSERT INTO users (user_id, name, email, password, is_admin)
+        VALUES (?, ?, ?, ?, ?);
+        """, (user_id,name, email, password, int(is_admin)))
         self.connection.commit()
 
         return user_id
@@ -383,14 +384,27 @@ class DatabaseController:
     
     def get_user_by_email(self, email: str) -> tuple | None:
         """
-        Returns (user_id, email, password, is_admin) for this email, or None.
+        Returns (user_id, name, email, password, is_admin) for this email, or None.
         Email is stored in users.email. Requires database_connect() first.
         """
         self.cursor.execute(
-            "SELECT user_id, email, password, is_admin FROM users WHERE email = ?;",
+            "SELECT user_id, name, email, password, is_admin FROM users WHERE email = ?;",
             (email.lower().strip(),),
         )
         return self.cursor.fetchone()
+    
+    def update_user_email(self, email:str, user_id:str):
+        """
+        Updates the email for a user. This comes from the page.js page of the profile
+        """
+        self.cursor.execute(
+            """UPDATE users
+               SET email = ?
+               WHERE user_id = ?;
+               """,
+               (email, user_id),
+        )
+        self.connection.commit()
 
     def get_stores_for_user(self, user_id: str) -> List[tuple]:
         """Return all stores linked to a user via user_owns."""

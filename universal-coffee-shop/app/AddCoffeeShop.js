@@ -49,7 +49,7 @@ function fun7(e){setLogoURL(e);}
 
      try {
         
-        const response = await fetch('http://192.168.1.175:8080/recieveForm/', {
+        const response = await fetch('http://172.20.10.8:8080/recieveForm/', {
              method: 'POST',
              headers: {
                 'Content-Type': 'application/json'              
@@ -61,7 +61,7 @@ function fun7(e){setLogoURL(e);}
             /*this hits if everything runs correctly and fetch returns
             with a status code in the range of 200 */
             
-            alert("Form submitted sucessfully");
+            Alert.alert("Form submitted sucessfully");
             const data = await response.json();
             setResponseMessage(data.storeName);
             
@@ -70,7 +70,7 @@ function fun7(e){setLogoURL(e);}
             server gave an error like a 404 status code. One reason for an error 
             could be an incorrect endpoint name*/
           
-            alert("There was an error when submitting the form, please try again. Make sure the phone number includes only numbers and '-'")        
+            Alert.alert("There was an error when submitting the form, please try again. Make sure the phone number includes only numbers and '-'")        
         }
     } catch (error) {
         //This hits if the server address is incorrect (couldn't reach the server)

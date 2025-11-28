@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Alert, Styl
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from "expo-router";
 
-const API_BASE = process.env.EXPO_PUBLIC_API_URL?.replace(/\/+$/, "") || "http://192.168.1.175:8080";
+const API_BASE = process.env.EXPO_PUBLIC_API_URL?.replace(/\/+$/, "") || "http://172.20.10.8:8080";
 
 export default function Signup() {
   const router = useRouter();
@@ -18,6 +18,10 @@ export default function Signup() {
   async function handleSignup() {
     if (!name || !email || !password) {
       Alert.alert("Missing info", "Please fill in all fields.");
+      return;
+    } else if (password.length < 8)
+    {
+      Alert.alert("Passwords must have at least 8 characters.")
       return;
     }
 
@@ -125,6 +129,7 @@ const styles = StyleSheet.create({
     fontFamily: "Anton-Regular",
     textAlign: "center",
     lineHeight: 50,
+    padding:10,
   },
 
   stylizedTitle: {
